@@ -997,7 +997,7 @@ void Render()
 	//}
 
 
-	//
+	// We are awesome
 	// Present our back buffer to our front buffer
 	//
 	g_pSwapChain->Present(0, 0);
