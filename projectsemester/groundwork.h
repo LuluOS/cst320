@@ -293,7 +293,6 @@ public:
 	{
 		XMMATRIX R, T;
 		R = XMMatrixRotationY(-rotation.y);
-<<<<<<< HEAD
 
 		XMFLOAT3 forward = XMFLOAT3(0, 0, 1);
 		XMVECTOR f = XMLoadFloat3(&forward);
@@ -306,28 +305,11 @@ public:
 		XMFLOAT3 ogPos;
 		ogPos = position;
 		float speed = elapsed / 50000.0;
-		if (w)
-		{
-			velocity += (.1 * speed);
-
-=======
-
-		XMFLOAT3 forward = XMFLOAT3(0, 0, 1);
-		XMVECTOR f = XMLoadFloat3(&forward);
-		f = XMVector3TransformCoord(f, R);
-		XMStoreFloat3(&forward, f);
-		XMFLOAT3 side = XMFLOAT3(1, 0, 0);
-		XMVECTOR si = XMLoadFloat3(&side);
-		si = XMVector3TransformCoord(si, R);
-		XMStoreFloat3(&side, si);
-		XMFLOAT3 ogPos;
-		ogPos = position;
-		float speed = elapsed / 50000.0;
+		float maxVelocity = 1.0;
 		if (w)
 		{
 			velocity += (.1 * speed);
 			
->>>>>>> origin/master
 		}
 		if (s)
 		{
@@ -340,6 +322,15 @@ public:
 		if (a)
 		{
 			rotation.y += .1 * speed;
+		}
+		
+		if (velocity > maxVelocity)
+		{
+			velocity = maxVelocity;
+		}
+		else if (velocity < -(maxVelocity))
+		{
+			velocity = -(maxVelocity);
 		}
 		position.x -= ((forward.x * 0.5 * speed) * velocity);
 		position.y -= ((forward.y * 0.5 * speed) * velocity);
