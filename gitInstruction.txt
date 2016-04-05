@@ -1,0 +1,18 @@
+Instruction:
+> Create the workspace and put the link to clone:
+https://github.com/LuluOS/cst320/
+
+> Set up the git user and email
+https://help.github.com/articles/set-up-git/#platform-linux
+
+> After working in the code, please upload to the github
+    # to see your status (all the changes you made)
+        $ git status
+    # to update you repo if it is not updated
+        $ git pull
+    # to add all
+        $ git add --all
+    # to commit
+        $ git commit -m "Your message for the commit"
+    # to push to the github repository
+        $ git push
