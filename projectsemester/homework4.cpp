@@ -51,7 +51,7 @@ XMFLOAT4                            g_vMeshColor(0.7f, 0.7f, 0.7f, 1.0f);
 
 ID3D11Buffer*                       g_pVertexBuffer_3ds = NULL;
 int									model_vertex_anz = 0;
-
+playerClass							pCar;
 camera								cam;
 level								level1;
 vector<billboard>					enemies;
@@ -517,40 +517,16 @@ HRESULT InitDevice()
 	float blendFactor[] = { 0, 0, 0, 0 };
 	UINT sampleMask = 0xffffffff;
 	g_pImmediateContext->OMSetBlendState(g_BlendState, blendFactor, sampleMask);
-	XMFLOAT3 *en = new XMFLOAT3[5];
-	en[0].x = -5.6;
-	en[0].y = 0.0;
-	en[0].z = 22.0;
-	en[1].x = -10.0;
-	en[1].y = 0.0;
-	en[1].z = 12.0;
-	en[2].x = 10.0;
-	en[2].y = 0.0;
-	en[2].z = 9.5;
-	en[3].x = 8.0;
-	en[3].y = 0.0;
-	en[3].z = 18.0;
-	en[4].x = 0.0;
-	en[4].y = 0.0;
-	en[4].z = 20.0;
-
-	for (size_t i = 0; i < 5; i++)
-	{
-
-	}
-	// init enemies
-
-	for (size_t i = 0; i < 5; i++)
-	{
-		billboard temp;
-		temp.position = en[i];
-		enemies.push_back(temp);
-	}
 
 	//AllocConsole(); // debug console
 	//freopen("conin$", "r", stdin);
 	//freopen("conout$", "w", stdout);
 	//freopen("conout$", "w", stderr);
+
+	
+	pCar.position = XMFLOAT3(0, 1, 3);
+	pCar.rotation = XMFLOAT3(0, 0, 0);
+
 
 	//create the depth stencil states for turning the depth buffer on and of:
 	D3D11_DEPTH_STENCIL_DESC		DS_ON, DS_OFF;
@@ -622,25 +598,7 @@ bullet *bull = NULL;
 vector<bullet> vBul;
 void OnLBD(HWND hwnd, BOOL fDoubleClick, int x, int y, UINT keyFlags)
 {
-	bull = new bullet;
-	bullet temp;
-	temp.pos.x = -cam.position.x;
-	temp.pos.y = -cam.position.y;
-	temp.pos.z = -cam.position.z - 6.0;
 
-	bull->pos.x = -cam.position.x;
-	bull->pos.y = -cam.position.y;
-	bull->pos.z = -cam.position.z - 6.0;
-	XMMATRIX CR = XMMatrixRotationY(-cam.rotation.y);
-
-	XMFLOAT3 forward = XMFLOAT3(0, 0, 3);
-	XMVECTOR f = XMLoadFloat3(&forward);
-	f = XMVector3TransformCoord(f, CR);
-	XMStoreFloat3(&forward, f);
-
-	bull->imp = forward;
-	temp.imp = forward;
-	vBul.push_back(temp);
 }
 ///////////////////////////////////
 //		This Function is called every time the Right Mouse Button is down
@@ -678,42 +636,42 @@ void OnRBU(HWND hwnd, int x, int y, UINT keyFlags)
 float lx, ly, cx, cy;
 void OnMM(HWND hwnd, int x, int y, UINT keyFlags)
 {
-	static int holdx = x, holdy = y;
-	static int reset_cursor = 0;
-	RECT rc; 			//rectangle structure
-	GetWindowRect(hwnd, &rc); 	//retrieves the window size
-	int border = 20;
-	rc.bottom -= border;
-	rc.right -= border;
-	rc.left += border;
-	rc.top += border;
-	ClipCursor(&rc);
+	//static int holdx = x, holdy = y;
+	//static int reset_cursor = 0;
+	//RECT rc; 			//rectangle structure
+	//GetWindowRect(hwnd, &rc); 	//retrieves the window size
+	//int border = 20;
+	//rc.bottom -= border;
+	//rc.right -= border;
+	//rc.left += border;
+	//rc.top += border;
+	//ClipCursor(&rc);
 
-	if ((keyFlags & MK_LBUTTON) == MK_LBUTTON)
-	{
-	}
+	//if ((keyFlags & MK_LBUTTON) == MK_LBUTTON)
+	//{
+	//}
 
-	if ((keyFlags & MK_RBUTTON) == MK_RBUTTON)
-	{
-	}
-	if (reset_cursor == 1)
-	{
-		reset_cursor = 0;
-		holdx = x;
-		holdy = y;
-		return;
-	}
-	int diffx = holdx - x;
-	//int diffy = holdy - y;
-	float angle_y = (float)diffx / 300.0;
-	//float angle_x = (float)diffy / 300.0;
-	cam.rotation.y += angle_y;
-	//cam.rotation.x += angle_x;
+	//if ((keyFlags & MK_RBUTTON) == MK_RBUTTON)
+	//{
+	//}
+	//if (reset_cursor == 1)
+	//{
+	//	reset_cursor = 0;
+	//	holdx = x;
+	//	holdy = y;
+	//	return;
+	//}
+	//int diffx = holdx - x;
+	////int diffy = holdy - y;
+	//float angle_y = (float)diffx / 300.0;
+	////float angle_x = (float)diffy / 300.0;
+	//cam.rotation.y += angle_y;
+	////cam.rotation.x += angle_x;
 
-	int midx = (rc.left + rc.right) / 2;
-	int midy = (rc.top + rc.bottom) / 2;
-	SetCursorPos(midx, midy);
-	reset_cursor = 1;
+	//int midx = (rc.left + rc.right) / 2;
+	//int midy = (rc.top + rc.bottom) / 2;
+	//SetCursorPos(midx, midy);
+	//reset_cursor = 1;
 
 }
 
@@ -732,15 +690,15 @@ void OnKeyUp(HWND hwnd, UINT vk, BOOL fDown, int cRepeat, UINT flags)
 {
 	switch (vk)
 	{
-	case 65:cam.a = 0;//a
+	case 65:pCar.a = 0;//a
 		break;
-	case 68: cam.d = 0;//d
+	case 68: pCar.d = 0;//d
 		break;
 	case 32: //space
 		break;
-	case 87: cam.w = 0; //w
+	case 87: pCar.w = 0; //w
 		break;
-	case 83:cam.s = 0; //s
+	case 83:pCar.s = 0; //s
 	default:break;
 
 	}
@@ -753,15 +711,15 @@ void OnKeyDown(HWND hwnd, UINT vk, BOOL fDown, int cRepeat, UINT flags)
 	switch (vk)
 	{
 	default:break;
-	case 65:cam.a = 1;//a
+	case 65:pCar.a = 1;//a
 		break;
-	case 68: cam.d = 1;//d
+	case 68: pCar.d = 1;//d
 		break;
 	case 32: //space
 		break;
-	case 87: cam.w = 1; //w
+	case 87: pCar.w = 1; //w
 		break;
-	case 83:cam.s = 1; //s
+	case 83:pCar.s = 1; //s
 		break;
 	case 27: PostQuitMessage(0);//escape
 		break;
@@ -865,7 +823,7 @@ void Render()
 	// Clear the depth buffer to 1.0 (max depth)
 
 	g_pImmediateContext->ClearDepthStencilView(g_pDepthStencilView, D3D11_CLEAR_DEPTH, 1.0f, 0);
-	cam.lvl = &level1;
+	/*cam.lvl = &level1;
 	cam.rx = cx;
 	cam.ry = cy;
 	if (lx < 630 && lx > 10)
@@ -875,9 +833,18 @@ void Render()
 	if (ly < 460 && ly > 10)
 	{
 		cy = 0;
-	}
-	cam.animation(elapsed);
-	XMMATRIX view = cam.get_matrix(&g_View);
+	}*/
+	//cam.animation(elapsed);
+
+	//Animate car and then move camera behind car (and do rotation of camera)
+	pCar.animation(elapsed);
+	cam.position = pCar.position;
+	cam.position.y -= .4;
+	cam.position.z -= 6;
+	XMMATRIX tempCam = cam.get_matrix(&g_View);
+	tempCam *= XMMatrixRotationY(pCar.rotation.y);
+	tempCam *= XMMatrixTranslation(0, -1, 3);
+	XMMATRIX view = tempCam;
 	XMMATRIX worldmatrix;
 	worldmatrix = XMMatrixIdentity();
 	// Update skybox constant buffer
@@ -897,21 +864,30 @@ void Render()
 
 	//g_pImmediateContext->OMSetDepthStencilState(ds_off, 1);
 	g_pImmediateContext->Draw(36, 0);
-
+	
 	XMMATRIX model = XMMatrixIdentity();
-	XMMATRIX S, T, R;
+	
+	XMMATRIX S, T, R, R2;
 	XMVECTOR det;
 
 	//render the aircraft
-	S = XMMatrixScaling(0.001, 0.001, 0.001);
+	S = XMMatrixScaling(0.0004, 0.0004, 0.0004);
 	T = XMMatrixTranslation(0, -1, 15);
 
 	XMMATRIX iC = XMMatrixInverse(&det, view);
 	//XMMATRIX rY = XMMatrixRotationY(XM_PIDIV2 + 0.4);
 
-	XMMATRIX Tc = XMMatrixTranslation(-cam.position.x, -cam.position.y, -cam.position.z);
+	XMMATRIX Tc = XMMatrixTranslation(-pCar.position.x, -pCar.position.y, -pCar.position.z);
+	//AllocConsole(); // debug console
+	//freopen("conin$", "r", stdin);
+	//freopen("conout$", "w", stdout);
+	//freopen("conout$", "w", stderr);
+	//printf("R%f, G%f, B%f/n", -pCar.position.x, -pCar.position.y, -pCar.position.z);
 	R = XMMatrixRotationX(-XM_PIDIV2);
-	model = S*R*T*iC;
+	R2 = XMMatrixRotationX(pCar.rotation.x);
+	R2 *= XMMatrixRotationY(-pCar.rotation.y);
+	
+	model = S*R*R2*Tc;
 
 	constantbuffer.World = XMMatrixTranspose(model);
 	constantbuffer.View = XMMatrixTranspose(view);
@@ -951,26 +927,26 @@ void Render()
 
 	//	g_pImmediateContext->Draw(12, 0);
 	//}
-	for (int ii = 0; ii < vBul.size(); ii++)
-	{
-		// make bullets
-		ConstantBuffer constantbuffer;
-		worldmatrix = vBul[ii].getmatrix(elapsed, view);
-		/*for (size_t i = 0; i < enemies.size(); i++)
-		{
-		if (pyTheorem(vBul[ii].pos, enemies[i].position) < 1.0)
-		{
-		enemies.erase(enemies.begin() + i);
-		}
-		}*/
-		g_pImmediateContext->PSSetShaderResources(0, 1, &g_bullTex);
-		constantbuffer.World = XMMatrixTranspose(worldmatrix);
-		constantbuffer.View = XMMatrixTranspose(view);
-		constantbuffer.Projection = XMMatrixTranspose(g_Projection);
-		constantbuffer.info = XMFLOAT4(1, 1, 1, 1);
-		g_pImmediateContext->UpdateSubresource(g_pCBuffer, 0, NULL, &constantbuffer, 0, 0);
-		g_pImmediateContext->Draw(12, 0);
-	}
+	//for (int ii = 0; ii < vBul.size(); ii++)
+	//{
+	//	// make bullets
+	//	ConstantBuffer constantbuffer;
+	//	worldmatrix = vBul[ii].getmatrix(elapsed, view);
+	//	/*for (size_t i = 0; i < enemies.size(); i++)
+	//	{
+	//	if (pyTheorem(vBul[ii].pos, enemies[i].position) < 1.0)
+	//	{
+	//	enemies.erase(enemies.begin() + i);
+	//	}
+	//	}*/
+	//	g_pImmediateContext->PSSetShaderResources(0, 1, &g_bullTex);
+	//	constantbuffer.World = XMMatrixTranspose(worldmatrix);
+	//	constantbuffer.View = XMMatrixTranspose(view);
+	//	constantbuffer.Projection = XMMatrixTranspose(g_Projection);
+	//	constantbuffer.info = XMFLOAT4(1, 1, 1, 1);
+	//	g_pImmediateContext->UpdateSubresource(g_pCBuffer, 0, NULL, &constantbuffer, 0, 0);
+	//	g_pImmediateContext->Draw(12, 0);
+	//}
 	//for (size_t i = 0; i < enemies.size(); i++)
 	//{
 	//	ConstantBuffer constantbuffer;
@@ -997,7 +973,7 @@ void Render()
 	//}
 
 
-	// We are awesome
+	//We are awesome
 	// Present our back buffer to our front buffer
 	//
 	g_pSwapChain->Present(0, 0);
