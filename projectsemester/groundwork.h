@@ -276,7 +276,109 @@ public:
 	}
 };
 
+class playerClass
+{
+public:
+	int w, s, a, d;
+	float ry, rx;
+	XMFLOAT3 position;
+	XMFLOAT3 rotation;
+	float velocity;
+	level *lvl; // for collision detection
+	playerClass()
+	{
+		velocity = 0.0;
+	};
+	void animation(long elapsed)
+	{
+		XMMATRIX R, T;
+		R = XMMatrixRotationY(-rotation.y);
 
+		XMFLOAT3 forward = XMFLOAT3(0, 0, 1);
+		XMVECTOR f = XMLoadFloat3(&forward);
+		f = XMVector3TransformCoord(f, R);
+		XMStoreFloat3(&forward, f);
+		XMFLOAT3 side = XMFLOAT3(1, 0, 0);
+		XMVECTOR si = XMLoadFloat3(&side);
+		si = XMVector3TransformCoord(si, R);
+		XMStoreFloat3(&side, si);
+		XMFLOAT3 ogPos;
+		ogPos = position;
+		float speed = elapsed / 50000.0;
+		if (w)
+		{
+			velocity += (.1 * speed);
+			
+		}
+		if (s)
+		{
+			velocity -= (.1 * speed);
+		}
+		if (d)
+		{
+			rotation.y -= .1 * speed;
+		}
+		if (a)
+		{
+			rotation.y += .1 * speed;
+		}
+		position.x -= ((forward.x * 0.5 * speed) * velocity);
+		position.y -= ((forward.y * 0.5 * speed) * velocity);
+		position.z -= ((forward.z * 0.5 * speed) * velocity);
+
+		float t1, t2, t3;
+		t1 = (-position.x) / 2.0 + 50.5;
+		t2 = ((-position.z) - 5.0) / 2.0;
+		XMFLOAT3 pix;
+		/// OLD COLLISION DETECTION  from Camera/FPS game
+		//pix = lvl->getPixel(t1, t2); 
+		//// Check if it fits inside bitmap, wall hack not fixed
+		//if (pix.x > 200 && pix.y < 100 && pix.z < 100)
+		//{
+		//	t1 = (-position.x) / 2.0 + 50.5;
+		//	t2 = ((-ogPos.z) - 5.0) / 2.0;
+		//	pix = lvl->getPixel(t1, t2);
+		//	if (pix.x > 200 && pix.y < 100 && pix.z < 100)
+		//	{
+		//		t1 = (-ogPos.x) / 2.0 + 50.5;
+		//		t2 = ((-position.z) - 5.0) / 2.0;
+		//		pix = lvl->getPixel(t1, t2);
+		//		if (pix.x > 200 && pix.y < 100 && pix.z < 100)
+		//		{
+		//			position = ogPos;
+		//		}
+		//		else
+		//		{
+		//			position.x = ogPos.x;
+		//		}
+		//	}
+		//	else
+		//	{
+		//		position.z = ogPos.z;
+		//	}
+		//}
+		
+		rotation.y -= rx / 200.0;
+		rotation.x -= ry / 200.0;
+		if (rotation.x > 1.5)
+		{
+			rotation.x = 1.5;
+		}
+		else if (rotation.x < -1.5)
+		{
+			rotation.x = -1.5;
+		}
+
+	}
+	XMMATRIX get_matrix(XMMATRIX *view)
+	{
+		XMMATRIX R, R2, T;
+		R = XMMatrixRotationY(rotation.y);
+		R2 = XMMatrixRotationX(rotation.x);
+		T = XMMatrixTranslation(position.x, position.y, position.z);
+		return T*(*view)*R*R2;
+	}
+};
 
 class camera
 {
