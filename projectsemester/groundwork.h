@@ -12,8 +12,6 @@
 
 using namespace std;
 
-using namespace std;
-// github test
 
 struct SimpleVertex
 {
@@ -309,7 +307,7 @@ public:
 		if (w)
 		{
 			velocity += (.1 * speed);
-			
+
 		}
 		if (s)
 		{
@@ -323,7 +321,7 @@ public:
 		{
 			rotation.y += .1 * speed;
 		}
-		
+
 		if (velocity > maxVelocity)
 		{
 			velocity = maxVelocity;
@@ -367,11 +365,7 @@ public:
 		//		position.z = ogPos.z;
 		//	}
 		//}
-<<<<<<< HEAD
 
-=======
-		
->>>>>>> origin/master
 		rotation.y -= rx / 200.0;
 		rotation.x -= ry / 200.0;
 		if (rotation.x > 1.5)

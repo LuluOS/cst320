@@ -11,7 +11,7 @@
 // Structures
 //--------------------------------------------------------------------------------------
 
-//test git
+
 
 
 //--------------------------------------------------------------------------------------
@@ -129,7 +129,7 @@ HRESULT InitWindow(HINSTANCE hInstance, int nCmdShow)
 
 	// Create window
 	g_hInst = hInstance;
-	RECT rc = { 0, 0, 640, 480 };
+	RECT rc = { 0, 0, 1280, 720};
 	AdjustWindowRect(&rc, WS_OVERLAPPEDWINDOW, FALSE);
 	g_hWnd = CreateWindow(L"TutorialWindowClass", L"Direct3D 11 Tutorial 7", WS_OVERLAPPEDWINDOW,
 		CW_USEDEFAULT, CW_USEDEFAULT, rc.right - rc.left, rc.bottom - rc.top, NULL, NULL, hInstance,
@@ -523,11 +523,7 @@ HRESULT InitDevice()
 	//freopen("conout$", "w", stdout);
 	//freopen("conout$", "w", stderr);
 
-<<<<<<< HEAD
 
-=======
-	
->>>>>>> origin/master
 	pCar.position = XMFLOAT3(0, 1, 3);
 	pCar.rotation = XMFLOAT3(0, 0, 0);
 
@@ -836,11 +832,7 @@ void Render()
 	}
 	if (ly < 460 && ly > 10)
 	{
-<<<<<<< HEAD
 	cy = 0;
-=======
-		cy = 0;
->>>>>>> origin/master
 	}*/
 	//cam.animation(elapsed);
 
@@ -872,13 +864,9 @@ void Render()
 
 	//g_pImmediateContext->OMSetDepthStencilState(ds_off, 1);
 	g_pImmediateContext->Draw(36, 0);
-	
-	XMMATRIX model = XMMatrixIdentity();
-<<<<<<< HEAD
 
-=======
-	
->>>>>>> origin/master
+	XMMATRIX model = XMMatrixIdentity();
+
 	XMMATRIX S, T, R, R2;
 	XMVECTOR det;
 
@@ -898,11 +886,7 @@ void Render()
 	R = XMMatrixRotationX(-XM_PIDIV2);
 	R2 = XMMatrixRotationX(pCar.rotation.x);
 	R2 *= XMMatrixRotationY(-pCar.rotation.y);
-<<<<<<< HEAD
 
-=======
-	
->>>>>>> origin/master
 	model = S*R*R2*Tc;
 
 	constantbuffer.World = XMMatrixTranspose(model);
