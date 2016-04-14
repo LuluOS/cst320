@@ -823,6 +823,7 @@ void Render()
 	// Clear the depth buffer to 1.0 (max depth)
 
 	g_pImmediateContext->ClearDepthStencilView(g_pDepthStencilView, D3D11_CLEAR_DEPTH, 1.0f, 0);
+	
 	/*cam.lvl = &level1;
 	cam.rx = cx;
 	cam.ry = cy;
@@ -837,6 +838,7 @@ void Render()
 	//cam.animation(elapsed);
 
 	//Animate car and then move camera behind car (and do rotation of camera)
+	pCar.lvl = &level1;
 	pCar.animation(elapsed);
 	cam.position = pCar.position;
 	cam.position.y -= .4;

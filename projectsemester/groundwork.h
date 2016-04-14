@@ -334,37 +334,59 @@ public:
 		position.y -= ((forward.y * 0.5 * speed) * velocity);
 		position.z -= ((forward.z * 0.5 * speed) * velocity);
 
-		float t1, t2, t3;
-		t1 = (-position.x) / 2.0 + 50.5;
-		t2 = ((-position.z) - 5.0) / 2.0;
-		XMFLOAT3 pix;
+		float t1, t2, t3, t4, t5, t6, t7, t8;
+		float xFLoff = 50.2;
+		float yFLoff = 3.0;
+
+		float xFRoff = 50.8;
+		float yFRoff = 3.0;
+
+		//front left
+		t1 = (-position.x) / 2.0 + xFLoff;
+		t2 = ((-position.z) - 5.0) / 2.0 + yFLoff;
+
+		//front right
+		t3 = (-position.x) / 2.0 + xFRoff;
+		t4= ((-position.z) - 5.0) / 2.0 + yFRoff;
+
+		XMFLOAT3 pixFL, pixFR, pix3, pix4;
 		/// OLD COLLISION DETECTION  from Camera/FPS game
-		//pix = lvl->getPixel(t1, t2); 
-		//// Check if it fits inside bitmap, wall hack not fixed
-		//if (pix.x > 200 && pix.y < 100 && pix.z < 100)
-		//{
-		//	t1 = (-position.x) / 2.0 + 50.5;
-		//	t2 = ((-ogPos.z) - 5.0) / 2.0;
-		//	pix = lvl->getPixel(t1, t2);
-		//	if (pix.x > 200 && pix.y < 100 && pix.z < 100)
-		//	{
-		//		t1 = (-ogPos.x) / 2.0 + 50.5;
-		//		t2 = ((-position.z) - 5.0) / 2.0;
-		//		pix = lvl->getPixel(t1, t2);
-		//		if (pix.x > 200 && pix.y < 100 && pix.z < 100)
-		//		{
-		//			position = ogPos;
-		//		}
-		//		else
-		//		{
-		//			position.x = ogPos.x;
-		//		}
-		//	}
-		//	else
-		//	{
-		//		position.z = ogPos.z;
-		//	}
-		//}
+		pixFL = lvl->getPixel(t1, t2); 
+		pixFR = lvl->getPixel(t3, t4);
+		// Check if it fits inside bitmap, wall hack not fixed
+		if ((pixFL.x > 200 && pixFL.y < 100 && pixFL.z < 100) || (pixFR.x > 200 && pixFR.y < 100 && pixFR.z < 100))
+		{
+			t1 = (-position.x) / 2.0 + xFLoff;
+			t2 = ((-ogPos.z) - 5.0) / 2.0 + yFLoff;
+			pixFL = lvl->getPixel(t1, t2);
+
+			t3 = (-position.x) / 2.0 + xFRoff;
+			t4 = ((-ogPos.z) - 5.0) / 2.0 + yFRoff;
+			pixFR = lvl->getPixel(t3, t4);
+
+			if ((pixFL.x > 200 && pixFL.y < 100 && pixFL.z < 100) || (pixFR.x > 200 && pixFR.y < 100 && pixFR.z < 100))
+			{
+				t1 = (-ogPos.x) / 2.0 + xFLoff;
+				t2 = ((-position.z) - 5.0) / 2.0 + yFLoff;
+				pixFL = lvl->getPixel(t1, t2);
+
+				t3 = (-ogPos.x) / 2.0 + xFRoff;
+				t4 = ((-position.z) - 5.0) / 2.0 + yFRoff;
+				pixFR = lvl->getPixel(t3, t4);
+				if (pixFL.x > 200 && pixFL.y < 100 && pixFL.z < 100)
+				{
+					position = ogPos;
+				}
+				else
+				{
+					position.x = ogPos.x;
+				}
+			}
+			else
+			{
+				position.z = ogPos.z;
+			}
+		}
 
 		rotation.y -= rx / 200.0;
 		rotation.x -= ry / 200.0;
@@ -406,98 +428,6 @@ public:
 	}
 	void animation(long elapsed)
 	{
-		XMMATRIX R, T;
-		R = XMMatrixRotationY(-rotation.y);
-
-		XMFLOAT3 forward = XMFLOAT3(0, 0, 1);
-		XMVECTOR f = XMLoadFloat3(&forward);
-		f = XMVector3TransformCoord(f, R);
-		XMStoreFloat3(&forward, f);
-		XMFLOAT3 side = XMFLOAT3(1, 0, 0);
-		XMVECTOR si = XMLoadFloat3(&side);
-		si = XMVector3TransformCoord(si, R);
-		XMStoreFloat3(&side, si);
-		XMFLOAT3 ogPos;
-		ogPos = position;
-		float speed = elapsed / 100000.0;
-		if (w)
-		{
-			position.x -= (forward.x * 0.5 * speed);
-			position.y -= (forward.y * 0.5 * speed);
-			position.z -= (forward.z * 0.5 * speed);
-		}
-		if (s)
-		{
-			position.x += (forward.x * 0.5 * speed);
-			position.y += (forward.y * 0.5 * speed);
-			position.z += (forward.z * 0.5 * speed);
-		}
-		if (d)
-		{
-			rotation.y -= .1 * speed;
-		}
-		if (a)
-		{
-			rotation.y += .1 * speed;
-		}
-		/*if (d)
-		{
-		position.x -= (side.x * 0.5 * speed);
-		position.y -= (side.y * 0.5 * speed);
-		position.z -= (side.z * 0.5 * speed);
-		}
-		if (a)
-		{
-		position.x += (side.x * 0.5 * speed);
-		position.y += (side.y * 0.5 * speed);
-		position.z += (side.z * 0.5 * speed);
-		}*/
-		float t1, t2, t3;
-		t1 = (-position.x) / 2.0 + 50.5;
-		t2 = ((-position.z) - 5.0) / 2.0;
-		XMFLOAT3 pix;
-		pix = lvl->getPixel(t1, t2);
-		// Check if it fits inside bitmap, wall hack not fixed
-		if (pix.x > 200 && pix.y < 100 && pix.z < 100)
-		{
-			t1 = (-position.x) / 2.0 + 50.5;
-			t2 = ((-ogPos.z) - 5.0) / 2.0;
-			pix = lvl->getPixel(t1, t2);
-			if (pix.x > 200 && pix.y < 100 && pix.z < 100)
-			{
-				t1 = (-ogPos.x) / 2.0 + 50.5;
-				t2 = ((-position.z) - 5.0) / 2.0;
-				pix = lvl->getPixel(t1, t2);
-				if (pix.x > 200 && pix.y < 100 && pix.z < 100)
-				{
-					position = ogPos;
-				}
-				else
-				{
-					position.x = ogPos.x;
-				}
-			}
-			else
-			{
-				position.z = ogPos.z;
-			}
-		}
-		/*AllocConsole(); // debug console
-		freopen("conin$", "r", stdin);
-		freopen("conout$", "w", stdout);
-		freopen("conout$", "w", stderr);
-		printf("R%f, G%f, B%f, X%f, Y%f\n", pix.z, pix.y, pix.x, t1, t2);*/
-		rotation.y -= rx / 200.0;
-		rotation.x -= ry / 200.0;
-		if (rotation.x > 1.5)
-		{
-			rotation.x = 1.5;
-		}
-		else if (rotation.x < -1.5)
-		{
-			rotation.x = -1.5;
-		}
-
 	}
 	XMMATRIX get_matrix(XMMATRIX *view)
 	{
